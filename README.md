@@ -91,7 +91,7 @@ password = ""
   }
 ```
 
-2. 解决N+1关联查询时延迟加载使用的cglib (需要加入cglib包，lazyLoadingEnabled=true)
+3. 解决N+1关联查询时延迟加载使用的cglib (需要加入cglib包，lazyLoadingEnabled=true)
 
 ```java
 //org.apache.ibatis.executor.loader.cglib.CglibProxyFactory.crateProxy
@@ -119,5 +119,50 @@ password = ""
       enhanced = enhancer.create(typesArray, valuesArray);
     }
     return enhanced;
+  }
+```
+
+* 构建者模式
+
+```xml
+<configuration>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED"/>
+        </environment>
+    </environments>
+</configuration>
+```
+
+```java
+//org.apache.ibatis.mapping.Environment.Builder
+  public static class Builder {
+      private String id;
+      private TransactionFactory transactionFactory;
+      private DataSource dataSource;
+
+    public Builder(String id) {
+      this.id = id;
+    }
+
+    public Builder transactionFactory(TransactionFactory transactionFactory) {
+      this.transactionFactory = transactionFactory;
+      return this;
+    }
+
+    public Builder dataSource(DataSource dataSource) {
+      this.dataSource = dataSource;
+      return this;
+    }
+
+    public String id() {
+      return this.id;
+    }
+
+    public Environment build() {
+      return new Environment(this.id, this.transactionFactory, this.dataSource);
+    }
+
   }
 ```
