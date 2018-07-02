@@ -1,0 +1,10 @@
+mybatis:
+#  type-aliases-package: com.example.domain.model
+#  type-handlers-package: com.example.typehandler
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 30
+spring:
+  datasource:
+    schema: schema-hsql.sql

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.haizong.mybatis.example.CityMapper">
+    <update id="createTable">
+        create table city(id int primary key, state varchar(100));
+    </update>
+    <insert id="insertData">
+        insert into city (id, state) values (1, 'zh_CN'), (2, 'CA')
+    </insert>
+    <select id="select" parameterType="string" resultType="org.haizong.mybatis.example.City">
+        SELECT * FROM CITY WHERE state = #{state}
+    </select>
+</mapper>
