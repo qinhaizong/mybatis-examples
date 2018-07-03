@@ -10,11 +10,12 @@
 
 ## 数据库设定
 
+```properties
 driverClassName = "org.hsqldb.jdbcDriver"
 url = "jdbc:hsqldb:mem:testdb"
 username = "sa"
 password = ""
-
+```
 
 ## mybatis使用到的设计模式
 
@@ -165,4 +166,23 @@ password = ""
     }
 
   }
+```
+
+* 单例模式
+
+```java
+public class ErrorContext {
+
+  private ErrorContext() {
+  }
+
+  public static ErrorContext instance() {
+    ErrorContext context = LOCAL.get();
+    if (context == null) {
+      context = new ErrorContext();
+      LOCAL.set(context);
+    }
+    return context;
+  }
+}
 ```
