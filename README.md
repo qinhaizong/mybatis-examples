@@ -165,6 +165,7 @@ password = ""
       return new Environment(this.id, this.transactionFactory, this.dataSource);
     }
 
+    //...
   }
 ```
 
@@ -184,5 +185,46 @@ public class ErrorContext {
     }
     return context;
   }
+}
+```
+
+* 委派模式（不属于23种经典设计模式之一）
+
+```java
+public class CachingExecutor implements Executor {
+
+  private final Executor delegate;
+  private final TransactionalCacheManager tcm = new TransactionalCacheManager();
+
+  public CachingExecutor(Executor delegate) {
+    this.delegate = delegate;
+    delegate.setExecutorWrapper(this);
+  }
+
+  @Override
+  public Transaction getTransaction() {
+    return delegate.getTransaction();
+  }
+
+  @Override
+  public void close(boolean forceRollback) {
+    try {
+      //issues #499, #524 and #573
+      if (forceRollback) {
+        tcm.rollback();
+      } else {
+        tcm.commit();
+      }
+    } finally {
+      delegate.close(forceRollback);
+    }
+  }
+
+  @Override
+  public boolean isClosed() {
+    return delegate.isClosed();
+  }
+
+  //...
 }
 ```
